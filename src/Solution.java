@@ -1,114 +1,98 @@
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 
 class Solution {
-    public int[][] solution(int[][] nodeinfo){
-        int[][] answer = {};
-        List<Node> list = new LinkedList<Node>();
+    public static class Node{
+        int x;
+        int y;
+        int idx;
+        Node left;
+        Node right;
 
-        for(int i = 0; i < nodeinfo.length; i++){
-            list.add(new Node(i+1, nodeinfo[i][0], nodeinfo[i][1]));
-        }
-
-        Collections.sort(list, new Comparator<Node>(){
-            @Override
-            public int compare(Node i1, Node i2){
-                if(i1.y > i2.y){
-                    return -1;
-                } else if(i1.y < i2.y){
-                    return 1;
-                } else {
-                    if(i1.x > i2.x){
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }
-            }
-        });
-
-        Tree tree = new Tree();
-        for(int i = 0; i < list.size(); i++){
-            tree.addNode(list.get(i));
-        }
-
-        tree.preOrder(tree.root);
-        String pre = tree.pre;
-
-        String[] a = pre.split(" ");
-        answer = new int[2][a.length];
-        for(int i = 0; i < a.length; i++){
-            answer[0][i] = Integer.parseInt(a[i]);
-        }
-
-
-        tree.postOrder(tree.root);
-        String post = tree.post;
-        String b[] = post.split(" ");
-        for(int i = 0; i < b.length; i++){
-            answer[1][i] = Integer.parseInt(b[i]);
-        }
-
-        return answer;
-    }
-
-    class Tree{
-        public Node root;
-        public String pre = "";
-        public String post = "";
-        public void addNode(Node i){
-            if(root == null){
-                root = i;
-            } else {
-                addNNode(i, root);
-            }
-        }
-        public void addNNode(Node i, Node root){
-            if(i.y < root.y){
-                if(i.x < root.x){
-                    if(root.left == null){
-                        root.left = i;
-                    } else {
-                        addNNode(i, root.left);
-                    }
-                } else {
-                    if(root.right == null){
-                        root.right = i;
-                    } else {
-                        addNNode(i, root.right);
-                    }
-                }
-            }
-        }
-        public void preOrder(Node root){
-            if(root == null) return;
-
-            pre += root.value + " ";
-            preOrder(root.left);
-            preOrder(root.right);
-        }
-        public void postOrder(Node root){
-            if(root == null) return;
-
-
-            postOrder(root.left);
-            postOrder(root.right);
-            post += root.value + " ";
-        }
-    }
-    class Node{
-        public int value;
-        public int x;
-        public int y;
-        public Node left;
-        public Node right;
-
-        public Node(int value, int x, int y){
-            this.value = value;
+        Node(int x, int y, int idx){
             this.x = x;
             this.y = y;
+            this.idx = idx;
+            left = null;
+            right = null;
         }
+    }
+
+    public static class BinaryTree{
+        Node root = null;
+
+        public BinaryTree() {}
+
+        public void insert(int x, int y, int idx) {
+            if(root != null) { //루트 노드가 있으면
+                Node head = root; //head는 root
+                Node cNode;
+
+                while(true) {
+                    cNode = head;
+                    if(x < cNode.x) {
+                        if(cNode.left != null) head = cNode.left;
+                        else {
+                            cNode.left = new Node(x, y, idx);
+                            break;
+                        }
+                    }
+                    else {
+                        if(cNode.right != null) head = cNode.right;
+                        else {
+                            cNode.right = new Node(x, y, idx);
+                            break;
+                        }
+                    }
+                }
+            }
+            //루트노드가 없으면
+            else root = new Node(x, y, idx);
+        }
+        public void preorder(Node n, ArrayList<Integer> list) { //전위순회
+            list.add(n.idx);
+            if(n.left != null) preorder(n.left, list);
+            if(n.right != null) preorder(n.right, list);
+        }
+
+        public void postorder(Node n, ArrayList<Integer> list) { //후위순회
+            if(n.left != null) postorder(n.left, list);
+            if(n.right != null) postorder(n.right, list);
+            list.add(n.idx);
+        }
+    }
+
+    public static int[][] solution(int[][] nodeinfo) {
+        int len = nodeinfo.length;
+        int[][] answer = new int[2][len], infos = new int[len][3];
+
+        for(int idx = 0; idx < len; ++idx) {
+            infos[idx][0] = nodeinfo[idx][0];
+            infos[idx][1] = nodeinfo[idx][1];
+            infos[idx][2] = idx + 1;
+        }
+
+        Arrays.sort(infos, new Comparator<int[]>() {
+            public int compare(int[] o1, int[] o2) {
+                if(o1[1] == o2[1]) {
+                    return o1[0] - o2[0];
+                }
+                return o2[1] - o1[1];
+            };
+        });
+
+        BinaryTree binary = new BinaryTree();
+        for(int idx = 0; idx < len; ++idx) binary.insert(infos[idx][0], infos[idx][1], infos[idx][2]);
+        ArrayList<Integer> pre = new ArrayList<>();
+        binary.preorder(binary.root, pre);
+        ArrayList<Integer> post = new ArrayList<>();
+        binary.postorder(binary.root, post);
+
+        for(int idx = 0; idx < len; ++idx) {
+            answer[0][idx] = pre.get(idx);
+            answer[1][idx] = post.get(idx);
+        }
+        return answer;
     }
 }
