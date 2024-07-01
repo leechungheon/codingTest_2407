@@ -1,5 +1,5 @@
 import java.util.*;
-public class Solution{
+public class Solution2{
     static class Search{
         char[][]array;
         boolean[][]visited;
