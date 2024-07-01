@@ -1,14 +1,18 @@
 public class Main {
     public static void main(String[] args) {
-        String[] maps = {
-                "X591X",
-                "X1X5X",
-                "X231X",
-                "1XXX1"
+        int[][] triangle = {
+                {7},
+                {3, 8},
+                {8, 1, 0},
+                {2, 7, 4, 4},
+                {4, 5, 2, 6, 5}
         };
 
         Solution solution = new Solution();
-        int[] result = solution.solution(maps);
+        int maxSum = solution.binaryTree(triangle, 0, 0, 0);
+
+        System.out.println("Max path sum: " + maxSum);
     }
+
 
 }
