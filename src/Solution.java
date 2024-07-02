@@ -1,11 +1,20 @@
 class Solution {
-    public int[] solution(String[] name, int[] yearning, String[][] photo) {
-        int[] answer = new int[photo.length];
-        for(int i=0; i<photo.length; i++){
-            for(int j=0; j<photo[i].length; j++){
-                for(int k=0; k<name.length; k++){
-                    if(photo[i][j].equals(name[k]))answer[i]+=yearning[k];
-                }
+    public String solution(String[] cards1, String[] cards2, String[] goal) {
+        String answer = "";
+        answer="Yes";
+        int cnt_g=0;
+        int cnt1=0;
+        int cnt2=0;
+        while(cnt_g<goal.length){
+            if(goal[cnt_g].equals(cards1[cnt1])){
+                if(cnt1+1< cards1.length)cnt1++;
+                cnt_g++;
+            }else if(goal[cnt_g].equals(cards2[cnt2])){
+                if(cnt2+1< cards2.length)cnt2++;
+                cnt_g++;
+            }else{
+                answer="No";
+                break;
             }
         }
         return answer;
