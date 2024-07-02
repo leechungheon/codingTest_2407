@@ -1,4 +1,4 @@
-class Solution {
+class Solution9 {
     public String solution(String[] cards1, String[] cards2, String[] goal) {
         String answer = "";
         answer="Yes";
