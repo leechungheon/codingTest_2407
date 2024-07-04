@@ -1,6 +1,6 @@
 import java.util.HashSet;
 
-class Solution {
+class Solution11 {
     public int solution(int[] nums) {
         int answer = 0;
         HashSet<Integer> set = new HashSet<Integer>();
