@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class Solution {
+class Solution13 {
     public int[] solution(int[] answers) {
 
         int[] a={1, 2, 3, 4, 5};
