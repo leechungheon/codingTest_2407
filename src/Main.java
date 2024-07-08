@@ -5,6 +5,9 @@ class Main{
         int[] lottos={44, 1, 0, 0, 31, 25};
         String dartResult="10T#1T*2D*";
         String[] babbling= {"tttttt"};
-        //Solution sol=new Solution();
+        String[] keymap= {"ABACD", "BCEFD"};
+        String[] targets= {"ABCD","AABB"};
+        Solution sol=new Solution();
+        System.out.println(sol.solution(keymap,targets));
     }
 }
