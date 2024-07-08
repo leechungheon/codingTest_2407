@@ -7,7 +7,10 @@ class Main{
         String[] babbling= {"tttttt"};
         String[] keymap= {"ABACD", "BCEFD"};
         String[] targets= {"ABCD","AABB"};
-        Solution sol=new Solution();
-        System.out.println(sol.solution(keymap,targets));
+        String s="z";
+        String skip="abcdefghij";
+        int index=20;
+        //Solution sol=new Solution();
+        //System.out.println(sol.solution(s,skip,index));
     }
 }
