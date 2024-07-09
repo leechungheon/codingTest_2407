@@ -1,6 +1,6 @@
 class Solution {
-    public int solution(String s) {
-        int answer = 0;
+    public String solution(String X, String Y) {
+        String answer = "";
         return answer;
     }
 }
