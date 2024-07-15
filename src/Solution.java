@@ -1,35 +1,57 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class Solution {
-    public int[] solution(String today, String[] terms, String[] privacies) {
-        List<Integer> answer = new ArrayList<>();
-        Map<String, Integer> termMap = new HashMap<>();
-        int date = getDate(today);
+    public int[] solution(String[] id_list, String[] report, int k) {
+        int[] answer = new int[id_list.length];
+        int i=0;
+        Set set = new HashSet();
+        Collections.addAll(set, report);
+        String[] reports=new String[set.size()];
+        Iterator<String> iterator = set.iterator();
 
-        for (String s : terms) {
-            String[] term = s.split(" ");
-
-            termMap.put(term[0], Integer.parseInt(term[1]));
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            reports[i]=element;
+            i++;
         }
-        for (int i = 0; i < privacies.length; i++) {
-            String[] privacy = privacies[i].split(" ");
 
-            if (getDate(privacy[0]) + (termMap.get(privacy[1]) * 28) <= date) {
-                answer.add(i + 1);
+        Map<String, Integer> map=new HashMap(); // 사용자들의 신고된 횟수
+        for (String item : reports) {
+            String[] s;
+            s = item.split(" ");
+            if (map.get(s[1]) != null) {
+                map.put(s[1], map.get(s[1]) + 1);
+            } else {
+                map.put(s[1], 1);
             }
         }
-        return answer.stream().mapToInt(integer -> integer).toArray();
-    }
+        List banlist=new ArrayList(); // 정지 사용자 리스트
+        for (String value : id_list) {
+            if (map.get(value) != null && map.get(value) >= k) {
+                banlist.add(value);
+            }
+        }
+        Map<String, Integer> count=new HashMap<>(); // 결과 메일 횟수
+        for (String string : reports) {
+            for (Object o : banlist) {
+                String[] s = string.split(" ");
+                if (s[1].equals(o)) {
+                    if (count.get(s[0]) == null) {
+                        count.put(s[0], 1);
+                    } else {
+                        count.put(s[0], count.get(s[0]) + 1);
+                    }
+                }
+            }
+        }
+        for(int n=0; n<id_list.length; n++){
+            if(count.get(id_list[n])==null){
+                answer[n]+=0;
+            }else{
+                answer[n]+=count.get(id_list[n]);
+            }
+        }
 
-    private int getDate(String today) {
-        String[] date = today.split("\\.");
-        int year = Integer.parseInt(date[0]);
-        int month = Integer.parseInt(date[1]);
-        int day = Integer.parseInt(date[2]);
-        return (year * 12 * 28) + (month * 28) + day;
+        return answer;
     }
 }
