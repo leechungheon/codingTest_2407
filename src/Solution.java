@@ -3,55 +3,51 @@ import java.util.*;
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
         int[] answer = new int[id_list.length];
-        int i=0;
-        Set set = new HashSet();
-        Collections.addAll(set, report);
-        String[] reports=new String[set.size()];
-        Iterator<String> iterator = set.iterator();
+        ArrayList<User> users = new ArrayList<>();
+        HashMap<String,Integer> suspendedList = new HashMap<>(); //<이름>
+        HashMap<String,Integer> idIdx = new HashMap<String,Integer>(); // <이름, 해당 이름의 User 클래스 idx>
+        int idx = 0;
 
-        while (iterator.hasNext()) {
-            String element = iterator.next();
-            reports[i]=element;
-            i++;
+        for(String name : id_list) {
+            idIdx.put(name,idx++);
+            users.add(new User(name));
         }
 
-        Map<String, Integer> map=new HashMap(); // 사용자들의 신고된 횟수
-        for (String item : reports) {
-            String[] s;
-            s = item.split(" ");
-            if (map.get(s[1]) != null) {
-                map.put(s[1], map.get(s[1]) + 1);
-            } else {
-                map.put(s[1], 1);
-            }
+        for(String re : report){
+            String[] str = re.split(" ");
+            //suspendedCount.put(str[0], suspendedCount.getOrDefault(str[0],0)+1);
+            users.get( idIdx.get(str[0])).reportList.add(str[1]);
+            users.get( idIdx.get(str[1])).reportedList.add(str[0]);
         }
-        List banlist=new ArrayList(); // 정지 사용자 리스트
-        for (String value : id_list) {
-            if (map.get(value) != null && map.get(value) >= k) {
-                banlist.add(value);
-            }
+
+        for(User user : users){
+            if(user.reportedList.size() >= k)
+                suspendedList.put(user.name,1);
         }
-        Map<String, Integer> count=new HashMap<>(); // 결과 메일 횟수
-        for (String string : reports) {
-            for (Object o : banlist) {
-                String[] s = string.split(" ");
-                if (s[1].equals(o)) {
-                    if (count.get(s[0]) == null) {
-                        count.put(s[0], 1);
-                    } else {
-                        count.put(s[0], count.get(s[0]) + 1);
-                    }
+
+        for(User user : users){
+            for(String nameReport : user.reportList){
+                if(suspendedList.get(nameReport) != null){
+                    answer[idIdx.get(user.name)]++;
                 }
+
             }
         }
-        for(int n=0; n<id_list.length; n++){
-            if(count.get(id_list[n])==null){
-                answer[n]+=0;
-            }else{
-                answer[n]+=count.get(id_list[n]);
-            }
-        }
+
+
+
 
         return answer;
+    }
+}
+
+class User{
+    String name;
+    HashSet<String> reportList;
+    HashSet<String> reportedList;
+    public User(String name){
+        this.name = name;
+        reportList = new HashSet<>();
+        reportedList = new HashSet<>();
     }
 }
