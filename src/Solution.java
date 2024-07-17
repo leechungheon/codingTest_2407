@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Solution {
+class Solution39 {
     public int[] solution(String[] id_list, String[] report, int k) {
         int[] answer = new int[id_list.length];
         ArrayList<User> users = new ArrayList<>();
